@@ -19,20 +19,10 @@ void loadData(const char* filename, int size, double* readArray) {
 	}
 	for (int i = 0; i<size && !file.eof(); i++)
 	{
-		try
-		{
-			double aDouble = 0;
-			file.read((char*)(&aDouble), sizeof(double));
-			readArray[i] = aDouble;
-			//printf("%lf\n", aDouble);
-		}
-		catch (int e)
-		{
-			cout << "An exception occurred. Exception Nr. " << e << endl;
-			break;
-		}
+		double aDouble = 0;
+		file.read((char*)(&aDouble), sizeof(double));
+		readArray[i] = aDouble;
 	}
-
 	file.close();
 }
 
@@ -46,15 +36,15 @@ void writeFile(const char *filename, const int size, double* readArray)
 	output.close();
 }
 
-void CPU_Med(float *d_in, float *d_out, int nx, int ny)
+void CPU_Med(float *d_in, float *d_out, int ny, int nx)
 {
 
-	for (int x = 0; x < nx; x++)
+	for (int x = 0; x < ny; x++)
 	{
-		for (int y = 0; y < ny; y++)
+		for (int y = 0; y < nx; y++)
 		{
 
-			if ((x >= (nx - 1)) || (y >= ny - 1) || (x == 0) || (y == 0)) //กรอบ 0
+			if ((x >= (ny - 1)) || (y >= nx - 1) || (x == 0) || (y == 0)) //กรอบ 0
 				return;
 
 			int i = 0;
@@ -63,8 +53,8 @@ void CPU_Med(float *d_in, float *d_out, int nx, int ny)
 			{
 				for (int yy = y - 1; yy <= y + 1; yy++)
 				{
-					if (0 <= xx && xx < nx && 0 <= yy && yy < ny) //ตัดมุม
-						v[i++] = d_in[yy*nx + xx];
+					if (0 <= xx && xx < ny && 0 <= yy && yy < nx) //ตัดมุม
+						v[i++] = d_in[yy*ny + xx];
 				}
 			}
 			//B sort
@@ -87,7 +77,7 @@ void CPU_Med(float *d_in, float *d_out, int nx, int ny)
 			printf("%d ", v[i]);
 			printf("\n\n");
 			}*/
-			d_out[y*nx + x] = v[4]; //4 mid
+			d_out[y*ny + x] = v[4]; //4 mid
 		}
 	}
 }
